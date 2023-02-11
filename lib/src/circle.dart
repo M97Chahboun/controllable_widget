@@ -11,6 +11,7 @@ class Circle extends StatefulWidget {
   final Function onDrag;
 
   @override
+  // ignore: library_private_types_in_public_api
   _BallState createState() => _BallState();
 }
 

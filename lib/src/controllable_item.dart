@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const ballDiameter = 10.0;
 
@@ -50,6 +51,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top - ballDiameter / 2,
           left: widget.left - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeUpLeft,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
               var newWidth = widget.width - dx;
@@ -69,6 +71,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top - ballDiameter / 2,
           left: widget.left + widget.width / 2 - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeUp,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
 
@@ -86,6 +89,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top - ballDiameter / 2,
           left: widget.left + widget.width - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeUpRight,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
               var newWidth = widget.width + dx;
@@ -104,6 +108,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top + widget.height / 2 - ballDiameter / 2,
           left: widget.left + widget.width - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeRight,
             onDrag: (dx, dy) {
               var newWidth = widget.width + dx;
 
@@ -120,6 +125,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top + widget.height - ballDiameter / 2,
           left: widget.left + widget.width - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeDownRight,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
               var newWidth = widget.width + dx;
@@ -137,6 +143,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top + widget.height - ballDiameter / 2,
           left: widget.left + widget.width / 2 - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeDown,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
 
@@ -153,6 +160,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top + widget.height - ballDiameter / 2,
           left: widget.left - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeDownLeft,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
               var newWidth = widget.width - dx;
@@ -172,6 +180,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           top: widget.top + widget.height / 2 - ballDiameter / 2,
           left: widget.left - ballDiameter / 2,
           child: Ball(
+            cursor: SystemMouseCursors.resizeLeft,
             onDrag: (dx, dy) {
               var newWidth = widget.width - dx;
 
@@ -190,8 +199,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
 }
 
 class Ball extends StatefulWidget {
-  const Ball({Key? key, required this.onDrag});
-
+  const Ball({super.key, required this.onDrag, required this.cursor});
+  final SystemMouseCursor cursor;
   final Function onDrag;
 
   @override
@@ -219,15 +228,18 @@ class _BallState extends State<Ball> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanStart: _handleDrag,
-      onPanUpdate: _handleUpdate,
-      child: Container(
-        width: ballDiameter,
-        height: ballDiameter,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 33, 243, 100).withOpacity(0.5),
-          shape: BoxShape.circle,
+    return MouseRegion(
+      cursor: widget.cursor,
+      child: GestureDetector(
+        onPanStart: _handleDrag,
+        onPanUpdate: _handleUpdate,
+        child: Container(
+          width: ballDiameter,
+          height: ballDiameter,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 33, 243, 100).withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
         ),
       ),
     );

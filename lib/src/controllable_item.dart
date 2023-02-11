@@ -1,9 +1,7 @@
 import 'dart:math';
 
+import 'package:controllable_widget/src/circle.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-const ballDiameter = 10.0;
 
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
@@ -17,7 +15,7 @@ class ControllableWidget extends StatefulWidget {
       required this.width,
       required this.left,
       required this.onUpdate});
-  final Function(Offset, Size) onUpdate;
+  final void Function({Offset offset, Size size}) onUpdate;
   final Widget child;
 
   @override
@@ -39,8 +37,9 @@ class _ControllableWidgetState extends State<ControllableWidget> {
             onPanUpdate: (details) {
               widget.left = max(0, widget.left + details.delta.dx);
               widget.top = max(0, widget.top + details.delta.dy);
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, widget.height));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, widget.height));
               setState(() {});
             },
             child: widget.child,
@@ -48,9 +47,9 @@ class _ControllableWidgetState extends State<ControllableWidget> {
         ),
         // top left
         Positioned(
-          top: widget.top - ballDiameter / 2,
-          left: widget.left - ballDiameter / 2,
-          child: Ball(
+          top: widget.top - circleDiameter / 2,
+          left: widget.left - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeUpLeft,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
@@ -62,33 +61,34 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.left = widget.left + dx;
               });
               widget.onUpdate(
-                  Offset(widget.left, widget.top), Size(newWidth, newHeight));
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(newWidth, newHeight));
             },
           ),
         ),
         // top middle
         Positioned(
-          top: widget.top - ballDiameter / 2,
-          left: widget.left + widget.width / 2 - ballDiameter / 2,
-          child: Ball(
+          top: widget.top - circleDiameter / 2,
+          left: widget.left + widget.width / 2 - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeUp,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
-
               setState(() {
                 widget.height = newHeight > 0 ? newHeight : 0;
                 widget.top = widget.top + dy;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, newHeight));
             },
           ),
         ),
         // top right
         Positioned(
-          top: widget.top - ballDiameter / 2,
-          left: widget.left + widget.width - ballDiameter / 2,
-          child: Ball(
+          top: widget.top - circleDiameter / 2,
+          left: widget.left + widget.width - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeUpRight,
             onDrag: (dx, dy) {
               var newHeight = widget.height - dy;
@@ -98,33 +98,34 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.top = widget.top + dy;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, newHeight));
             },
           ),
         ),
         // center right
         Positioned(
-          top: widget.top + widget.height / 2 - ballDiameter / 2,
-          left: widget.left + widget.width - ballDiameter / 2,
-          child: Ball(
+          top: widget.top + widget.height / 2 - circleDiameter / 2,
+          left: widget.left + widget.width - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeRight,
             onDrag: (dx, dy) {
               var newWidth = widget.width + dx;
-
               setState(() {
                 widget.width = newWidth > 0 ? newWidth : 0;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(newWidth, widget.height));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(newWidth, widget.height));
             },
           ),
         ),
         // bottom right
         Positioned(
-          top: widget.top + widget.height - ballDiameter / 2,
-          left: widget.left + widget.width - ballDiameter / 2,
-          child: Ball(
+          top: widget.top + widget.height - circleDiameter / 2,
+          left: widget.left + widget.width - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeDownRight,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
@@ -133,115 +134,68 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.height = newHeight > 0 ? newHeight : 0;
                 widget.width = newWidth > 0 ? newWidth : 0;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, newHeight));
             },
           ),
         ),
         // bottom center
         Positioned(
-          top: widget.top + widget.height - ballDiameter / 2,
-          left: widget.left + widget.width / 2 - ballDiameter / 2,
-          child: Ball(
+          top: widget.top + widget.height - circleDiameter / 2,
+          left: widget.left + widget.width / 2 - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeDown,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
-
               setState(() {
                 widget.height = newHeight > 0 ? newHeight : 0;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, newHeight));
             },
           ),
         ),
         // bottom left
         Positioned(
-          top: widget.top + widget.height - ballDiameter / 2,
-          left: widget.left - ballDiameter / 2,
-          child: Ball(
+          top: widget.top + widget.height - circleDiameter / 2,
+          left: widget.left - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeDownLeft,
             onDrag: (dx, dy) {
               var newHeight = widget.height + dy;
               var newWidth = widget.width - dx;
-
               setState(() {
                 widget.height = newHeight > 0 ? newHeight : 0;
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.left = widget.left + dx;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(widget.width, newHeight));
             },
           ),
         ),
         //left center
         Positioned(
-          top: widget.top + widget.height / 2 - ballDiameter / 2,
-          left: widget.left - ballDiameter / 2,
-          child: Ball(
+          top: widget.top + widget.height / 2 - circleDiameter / 2,
+          left: widget.left - circleDiameter / 2,
+          child: Circle(
             cursor: SystemMouseCursors.resizeLeft,
             onDrag: (dx, dy) {
               var newWidth = widget.width - dx;
-
               setState(() {
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.left = widget.left + dx;
               });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(newWidth, widget.height));
+              widget.onUpdate(
+                  offset: Offset(widget.left, widget.top),
+                  size: Size(newWidth, widget.height));
             },
           ),
         ),
       ],
-    );
-  }
-}
-
-class Ball extends StatefulWidget {
-  const Ball({super.key, required this.onDrag, required this.cursor});
-  final SystemMouseCursor cursor;
-  final Function onDrag;
-
-  @override
-  _BallState createState() => _BallState();
-}
-
-class _BallState extends State<Ball> {
-  late double initX;
-  late double initY;
-
-  _handleDrag(details) {
-    setState(() {
-      initX = details.globalPosition.dx;
-      initY = details.globalPosition.dy;
-    });
-  }
-
-  _handleUpdate(details) {
-    var dx = details.globalPosition.dx - initX;
-    var dy = details.globalPosition.dy - initY;
-    initX = details.globalPosition.dx;
-    initY = details.globalPosition.dy;
-    widget.onDrag(dx, dy);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: widget.cursor,
-      child: GestureDetector(
-        onPanStart: _handleDrag,
-        onPanUpdate: _handleUpdate,
-        child: Container(
-          width: ballDiameter,
-          height: ballDiameter,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 33, 243, 100).withOpacity(0.5),
-            shape: BoxShape.circle,
-          ),
-        ),
-      ),
     );
   }
 }

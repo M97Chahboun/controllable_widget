@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
   double height, width, left, top;
-
+  /// Make sure you used it inside of [Stack]
   ControllableWidget(
       {super.key,
       required this.child,

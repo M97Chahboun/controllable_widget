@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
   double height, width, left, top;
+
   /// Make sure you used it inside of [Stack]
   ControllableWidget(
       {super.key,
@@ -15,7 +16,7 @@ class ControllableWidget extends StatefulWidget {
       required this.width,
       required this.left,
       required this.onUpdate});
-  final void Function({required Offset offset, required Size size}) onUpdate;
+  final void Function(Offset offset, Size size) onUpdate;
   final Widget child;
 
   @override
@@ -37,9 +38,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
             onPanUpdate: (details) {
               widget.left = max(0, widget.left + details.delta.dx);
               widget.top = max(0, widget.top + details.delta.dy);
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, widget.height));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, widget.height));
               setState(() {});
             },
             child: widget.child,
@@ -61,8 +61,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.left = widget.left + dx;
               });
               widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(newWidth, newHeight));
+                  Offset(widget.left, widget.top), Size(newWidth, newHeight));
             },
           ),
         ),
@@ -78,9 +77,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.height = newHeight > 0 ? newHeight : 0;
                 widget.top = widget.top + dy;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, newHeight));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, newHeight));
             },
           ),
         ),
@@ -98,9 +96,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.top = widget.top + dy;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, newHeight));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, newHeight));
             },
           ),
         ),
@@ -115,9 +112,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
               setState(() {
                 widget.width = newWidth > 0 ? newWidth : 0;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(newWidth, widget.height));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(newWidth, widget.height));
             },
           ),
         ),
@@ -134,9 +130,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.height = newHeight > 0 ? newHeight : 0;
                 widget.width = newWidth > 0 ? newWidth : 0;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, newHeight));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, newHeight));
             },
           ),
         ),
@@ -151,9 +146,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
               setState(() {
                 widget.height = newHeight > 0 ? newHeight : 0;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, newHeight));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, newHeight));
             },
           ),
         ),
@@ -171,9 +165,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.left = widget.left + dx;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(widget.width, newHeight));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(widget.width, newHeight));
             },
           ),
         ),
@@ -189,9 +182,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
                 widget.width = newWidth > 0 ? newWidth : 0;
                 widget.left = widget.left + dx;
               });
-              widget.onUpdate(
-                  offset: Offset(widget.left, widget.top),
-                  size: Size(newWidth, widget.height));
+              widget.onUpdate(Offset(widget.left, widget.top),
+                  Size(newWidth, widget.height));
             },
           ),
         ),

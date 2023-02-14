@@ -37,7 +37,7 @@ class MyHomePage extends StatelessWidget {
             width: 60.0,
             top: 0,
             left: 0,
-            onUpdate: ({Offset? offset, Size? size}) {
+            onUpdate: (Offset offset, Size size) {
               print("Offset:$offset");
               print("Size:$size");
             },

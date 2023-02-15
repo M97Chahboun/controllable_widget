@@ -16,7 +16,7 @@ class ControllableWidget extends StatefulWidget {
       required this.width,
       required this.left,
       required this.onUpdate});
-  final void Function(Offset offset, Size size) onUpdate;
+  final void Function(Offset newOffset, Size newSize) onUpdate;
   final Widget child;
 
   @override

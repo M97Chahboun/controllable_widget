@@ -15,14 +15,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
+// ignore: must_be_immutable
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
+  MyHomePage({super.key});
+  double height = 60.0, width = 60.0, top = 0, left = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,13 +34,17 @@ class MyHomePage extends StatelessWidget {
         child: Stack(
             children: List.generate(5, (index) {
           return ControllableWidget(
-            height: 60.0,
-            width: 60.0,
-            top: 0,
-            left: 0,
-            onUpdate: (Offset offset, Size size) {
-              print("Offset:$offset");
-              print("Size:$size");
+            height: height,
+            width: width,
+            left: left,
+            top: top,
+            onUpdate: (Offset newOffset, Size newSize) {
+              print("Offset:$newOffset");
+              print("Size:$newSize");
+              height = newSize.height;
+              width = newSize.width;
+              left = newOffset.dx;
+              top = newOffset.dy;
             },
             child: ColoredBox(
                 color: Colors.blue, child: Center(child: Text("Item $index"))),

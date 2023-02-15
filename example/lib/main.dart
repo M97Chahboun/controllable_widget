@@ -38,11 +38,23 @@ class MyHomePage extends StatelessWidget {
             width: width,
             left: left,
             top: top,
-            onUpdate: (Offset newOffset, Size newSize) {
-              print("Offset:$newOffset");
+            onResize: (Size newSize) {
               print("Size:$newSize");
               height = newSize.height;
               width = newSize.width;
+            },
+            onMove: (newOffset) {
+              print("Offset:$newOffset");
+              left = newOffset.dx;
+              top = newOffset.dy;
+            },
+            onEndResize: (newSize) {
+              print("Size End :$newSize");
+              height = newSize.height;
+              width = newSize.width;
+            },
+            onEndMove: (newOffset) {
+              print("Offset End :$newOffset");
               left = newOffset.dx;
               top = newOffset.dy;
             },

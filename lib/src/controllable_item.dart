@@ -10,6 +10,9 @@ typedef OnUpdate = void Function(Offset newOffset, Size newSize);
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
   double height, width, left, top;
+  static _defaultUpdate(Offset newOffset, Size newSize) {}
+  static _defaultOnMove(Offset newOffset) {}
+  static _defaultOnResize(Size newSize) {}
 
   /// Make sure you used it inside of [Stack]
   ControllableWidget(
@@ -19,12 +22,12 @@ class ControllableWidget extends StatefulWidget {
       required this.height,
       required this.width,
       required this.left,
-      this.onResize,
-      this.onEndResize,
-      this.onMove,
-      this.onEndMove,
-      this.onUpdate,
-      this.onEndUpdate});
+      this.onResize = _defaultOnResize,
+      this.onEndResize = _defaultOnResize,
+      this.onMove = _defaultOnMove,
+      this.onEndMove = _defaultOnMove,
+      this.onUpdate = _defaultUpdate,
+      this.onEndUpdate = _defaultUpdate});
   final OnResize? onResize;
   final OnResize? onEndResize;
   final OnMove? onMove;
@@ -54,9 +57,9 @@ class _ControllableWidgetState extends State<ControllableWidget> {
               widget.left = max(0, widget.left + details.delta.dx);
               widget.top = max(0, widget.top + details.delta.dy);
               widget.onMove!(Offset(widget.left, widget.top));
-              setState(() {});
               widget.onUpdate!(Offset(widget.left, widget.top),
                   Size(widget.width, widget.height));
+              setState(() {});
             },
             child: widget.child,
           ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 typedef OnMove = void Function(Offset newOffset);
 typedef OnResize = void Function(Size newSize);
+typedef OnUpdate = void Function(Offset newOffset, Size newSize);
 
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
@@ -21,11 +22,15 @@ class ControllableWidget extends StatefulWidget {
       this.onResize,
       this.onEndResize,
       this.onMove,
-      this.onEndMove});
+      this.onEndMove,
+      this.onUpdate,
+      this.onEndUpdate});
   final OnResize? onResize;
   final OnResize? onEndResize;
   final OnMove? onMove;
   final OnMove? onEndMove;
+  final OnUpdate? onUpdate;
+  final OnUpdate? onEndUpdate;
   final Widget child;
 
   @override
@@ -50,6 +55,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
               widget.top = max(0, widget.top + details.delta.dy);
               widget.onMove!(Offset(widget.left, widget.top));
               setState(() {});
+              widget.onUpdate!(Offset(widget.left, widget.top),
+                  Size(widget.width, widget.height));
             },
             child: widget.child,
           ),
@@ -130,7 +137,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeLeft,
-            onDrag: _LeftCenter,
+            onDrag: _leftCenter,
             onEnd: _onEndResize,
           ),
         ),
@@ -140,19 +147,25 @@ class _ControllableWidgetState extends State<ControllableWidget> {
 
   _onEndMove(details) {
     widget.onEndMove!(Offset(widget.left, widget.top));
+    widget.onEndUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, widget.height));
   }
 
   _onEndResize(details) {
     widget.onEndResize!(Size(widget.width, widget.height));
+    widget.onEndUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, widget.height));
   }
 
-  void _LeftCenter(dx, dy) {
+  void _leftCenter(dx, dy) {
     var newWidth = widget.width - dx;
     setState(() {
       widget.width = newWidth > 0 ? newWidth : 0;
       widget.left = widget.left + dx;
     });
     widget.onResize!(Size(newWidth, widget.height));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(newWidth, widget.height));
   }
 
   void _bottomLeft(dx, dy) {
@@ -164,6 +177,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.left = widget.left + dx;
     });
     widget.onResize!(Size(widget.width, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, newHeight));
   }
 
   void _bottomCenter(dx, dy) {
@@ -172,6 +187,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.height = newHeight > 0 ? newHeight : 0;
     });
     widget.onResize!(Size(widget.width, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, newHeight));
   }
 
   void _bottomRight(dx, dy) {
@@ -182,6 +199,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.width = newWidth > 0 ? newWidth : 0;
     });
     widget.onResize!(Size(widget.width, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, newHeight));
   }
 
   void _centerRight(dx, dy) {
@@ -190,6 +209,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.width = newWidth > 0 ? newWidth : 0;
     });
     widget.onResize!(Size(newWidth, widget.height));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(newWidth, widget.height));
   }
 
   void _topRight(dx, dy) {
@@ -201,6 +222,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.top = widget.top + dy;
     });
     widget.onResize!(Size(widget.width, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, newHeight));
   }
 
   void _topCenter(dx, dy) {
@@ -210,6 +233,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.top = widget.top + dy;
     });
     widget.onResize!(Size(widget.width, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(widget.width, newHeight));
   }
 
   void _topLeft(dx, dy) {
@@ -222,5 +247,7 @@ class _ControllableWidgetState extends State<ControllableWidget> {
       widget.left = widget.left + dx;
     });
     widget.onResize!(Size(newWidth, newHeight));
+    widget.onUpdate!(
+        Offset(widget.left, widget.top), Size(newWidth, newHeight));
   }
 }

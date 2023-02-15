@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:controllable_widget/src/circle.dart';
 import 'package:flutter/material.dart';
 
+typedef OnMove = void Function(Offset newOffset);
+typedef OnResize = void Function(Size newSize);
+
 // ignore: must_be_immutable
 class ControllableWidget extends StatefulWidget {
   double height, width, left, top;
@@ -15,8 +18,14 @@ class ControllableWidget extends StatefulWidget {
       required this.height,
       required this.width,
       required this.left,
-      required this.onUpdate});
-  final void Function(Offset newOffset, Size newSize) onUpdate;
+      this.onResize,
+      this.onEndResize,
+      this.onMove,
+      this.onEndMove});
+  final OnResize? onResize;
+  final OnResize? onEndResize;
+  final OnMove? onMove;
+  final OnMove? onEndMove;
   final Widget child;
 
   @override
@@ -35,11 +44,11 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           height: widget.height,
           width: widget.width,
           child: GestureDetector(
+            onPanEnd: _onEndMove,
             onPanUpdate: (details) {
               widget.left = max(0, widget.left + details.delta.dx);
               widget.top = max(0, widget.top + details.delta.dy);
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, widget.height));
+              widget.onMove!(Offset(widget.left, widget.top));
               setState(() {});
             },
             child: widget.child,
@@ -51,18 +60,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeUpLeft,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height - dy;
-              var newWidth = widget.width - dx;
-              setState(() {
-                widget.width = newWidth > 0 ? newWidth : 0;
-                widget.height = newHeight > 0 ? newHeight : 0;
-                widget.top = widget.top + dy;
-                widget.left = widget.left + dx;
-              });
-              widget.onUpdate(
-                  Offset(widget.left, widget.top), Size(newWidth, newHeight));
-            },
+            onDrag: _topLeft,
+            onEnd: _onEndResize,
           ),
         ),
         // top middle
@@ -71,15 +70,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left + widget.width / 2 - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeUp,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height - dy;
-              setState(() {
-                widget.height = newHeight > 0 ? newHeight : 0;
-                widget.top = widget.top + dy;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
-            },
+            onDrag: _topCenter,
+            onEnd: _onEndResize,
           ),
         ),
         // top right
@@ -88,17 +80,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left + widget.width - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeUpRight,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height - dy;
-              var newWidth = widget.width + dx;
-              setState(() {
-                widget.height = newHeight > 0 ? newHeight : 0;
-                widget.width = newWidth > 0 ? newWidth : 0;
-                widget.top = widget.top + dy;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
-            },
+            onDrag: _topRight,
+            onEnd: _onEndResize,
           ),
         ),
         // center right
@@ -107,14 +90,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left + widget.width - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeRight,
-            onDrag: (dx, dy) {
-              var newWidth = widget.width + dx;
-              setState(() {
-                widget.width = newWidth > 0 ? newWidth : 0;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(newWidth, widget.height));
-            },
+            onDrag: _centerRight,
+            onEnd: _onEndResize,
           ),
         ),
         // bottom right
@@ -123,16 +100,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left + widget.width - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeDownRight,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height + dy;
-              var newWidth = widget.width + dx;
-              setState(() {
-                widget.height = newHeight > 0 ? newHeight : 0;
-                widget.width = newWidth > 0 ? newWidth : 0;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
-            },
+            onDrag: _bottomRight,
+            onEnd: _onEndResize,
           ),
         ),
         // bottom center
@@ -141,14 +110,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left + widget.width / 2 - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeDown,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height + dy;
-              setState(() {
-                widget.height = newHeight > 0 ? newHeight : 0;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
-            },
+            onDrag: _bottomCenter,
+            onEnd: _onEndResize,
           ),
         ),
         // bottom left
@@ -157,17 +120,8 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeDownLeft,
-            onDrag: (dx, dy) {
-              var newHeight = widget.height + dy;
-              var newWidth = widget.width - dx;
-              setState(() {
-                widget.height = newHeight > 0 ? newHeight : 0;
-                widget.width = newWidth > 0 ? newWidth : 0;
-                widget.left = widget.left + dx;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(widget.width, newHeight));
-            },
+            onDrag: _bottomLeft,
+            onEnd: _onEndResize,
           ),
         ),
         //left center
@@ -176,18 +130,97 @@ class _ControllableWidgetState extends State<ControllableWidget> {
           left: widget.left - circleDiameter / 2,
           child: Circle(
             cursor: SystemMouseCursors.resizeLeft,
-            onDrag: (dx, dy) {
-              var newWidth = widget.width - dx;
-              setState(() {
-                widget.width = newWidth > 0 ? newWidth : 0;
-                widget.left = widget.left + dx;
-              });
-              widget.onUpdate(Offset(widget.left, widget.top),
-                  Size(newWidth, widget.height));
-            },
+            onDrag: _LeftCenter,
+            onEnd: _onEndResize,
           ),
         ),
       ],
     );
+  }
+
+  _onEndMove(details) {
+    widget.onEndMove!(Offset(widget.left, widget.top));
+  }
+
+  _onEndResize(details) {
+    widget.onEndResize!(Size(widget.width, widget.height));
+  }
+
+  void _LeftCenter(dx, dy) {
+    var newWidth = widget.width - dx;
+    setState(() {
+      widget.width = newWidth > 0 ? newWidth : 0;
+      widget.left = widget.left + dx;
+    });
+    widget.onResize!(Size(newWidth, widget.height));
+  }
+
+  void _bottomLeft(dx, dy) {
+    var newHeight = widget.height + dy;
+    var newWidth = widget.width - dx;
+    setState(() {
+      widget.height = newHeight > 0 ? newHeight : 0;
+      widget.width = newWidth > 0 ? newWidth : 0;
+      widget.left = widget.left + dx;
+    });
+    widget.onResize!(Size(widget.width, newHeight));
+  }
+
+  void _bottomCenter(dx, dy) {
+    var newHeight = widget.height + dy;
+    setState(() {
+      widget.height = newHeight > 0 ? newHeight : 0;
+    });
+    widget.onResize!(Size(widget.width, newHeight));
+  }
+
+  void _bottomRight(dx, dy) {
+    var newHeight = widget.height + dy;
+    var newWidth = widget.width + dx;
+    setState(() {
+      widget.height = newHeight > 0 ? newHeight : 0;
+      widget.width = newWidth > 0 ? newWidth : 0;
+    });
+    widget.onResize!(Size(widget.width, newHeight));
+  }
+
+  void _centerRight(dx, dy) {
+    var newWidth = widget.width + dx;
+    setState(() {
+      widget.width = newWidth > 0 ? newWidth : 0;
+    });
+    widget.onResize!(Size(newWidth, widget.height));
+  }
+
+  void _topRight(dx, dy) {
+    var newHeight = widget.height - dy;
+    var newWidth = widget.width + dx;
+    setState(() {
+      widget.height = newHeight > 0 ? newHeight : 0;
+      widget.width = newWidth > 0 ? newWidth : 0;
+      widget.top = widget.top + dy;
+    });
+    widget.onResize!(Size(widget.width, newHeight));
+  }
+
+  void _topCenter(dx, dy) {
+    var newHeight = widget.height - dy;
+    setState(() {
+      widget.height = newHeight > 0 ? newHeight : 0;
+      widget.top = widget.top + dy;
+    });
+    widget.onResize!(Size(widget.width, newHeight));
+  }
+
+  void _topLeft(dx, dy) {
+    var newHeight = widget.height - dy;
+    var newWidth = widget.width - dx;
+    setState(() {
+      widget.width = newWidth > 0 ? newWidth : 0;
+      widget.height = newHeight > 0 ? newHeight : 0;
+      widget.top = widget.top + dy;
+      widget.left = widget.left + dx;
+    });
+    widget.onResize!(Size(newWidth, newHeight));
   }
 }

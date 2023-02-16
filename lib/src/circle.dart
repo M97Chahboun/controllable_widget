@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Circle extends StatefulWidget {
-  const Circle(
-      {super.key,
-      required this.onDrag,
-      required this.cursor,
-      this.onEnd,
-      required this.circleSize});
+  const Circle({
+    super.key,
+    required this.onDrag,
+    required this.cursor,
+    required this.circleSize,
+    this.onEnd,
+  });
   final SystemMouseCursor cursor;
   final Function onDrag;
   final Function(DragEndDetails)? onEnd;

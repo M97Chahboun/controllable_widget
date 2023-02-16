@@ -59,7 +59,11 @@ class MyHomePage extends StatelessWidget {
               top = newOffset.dy;
             },
             child: ColoredBox(
-                color: Colors.blue, child: Center(child: Text("Item $index"))),
+              color: Colors.blue,
+              child: Center(
+                child: Text("Item $index"),
+              ),
+            ),
           );
         })),
       ),

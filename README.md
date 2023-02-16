@@ -1,39 +1,57 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+Package for make widget controllable
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
+![Alt Text](/example.gif)
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- [x] Move widget (onMove & onEndMove)
+- [x] Resize widget (onResize & onEndResize)
+- [x] Resize & Move (onUpdate & onEndUpdate)
+- [ ] Rotate widget (onRotate & onEndRotate)
+- [ ] Add max/min size
+- [ ] Add max/min offset
+- [ ] Add max/min rotate
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+It's required to use ControllableWidget inside of Stack widget
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+ControllableWidget(
+	height: height,
+	width: width,
+	left: left,
+	top: top,
+	onResize: (Size newSize) {
+		print("Size:$newSize");
+		height = newSize.height;
+		width = newSize.width;
+	},
+	onMove: (newOffset) {
+		print("Offset:$newOffset");
+		left = newOffset.dx;
+		top = newOffset.dy;
+	},
+	onEndResize: (newSize) {
+		print("Size End :$newSize");
+		height = newSize.height;
+		width = newSize.width;
+	},
+	onEndMove: (newOffset) {
+		print("Offset End :$newOffset");
+		left = newOffset.dx;
+		top = newOffset.dy;
+	},
+	child: ColoredBox(
+		color: Colors.blue,
+		child: Center(
+		child: Text("Item $index"),
+		),
+	),
+	);
 ```
+Full [`/example`](/example)
 
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Finally, feel free to contribute or suggest any idea 💡

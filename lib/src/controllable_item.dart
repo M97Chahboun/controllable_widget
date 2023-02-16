@@ -22,6 +22,7 @@ class ControllableWidget extends StatefulWidget {
       required this.height,
       required this.width,
       required this.left,
+      this.circleSize = 10.0,
       this.onResize = _defaultOnResize,
       this.onEndResize = _defaultOnResize,
       this.onMove = _defaultOnMove,
@@ -34,6 +35,7 @@ class ControllableWidget extends StatefulWidget {
   final OnMove? onEndMove;
   final OnUpdate? onUpdate;
   final OnUpdate? onEndUpdate;
+  final double circleSize;
   final Widget child;
 
   @override
@@ -66,95 +68,95 @@ class _ControllableWidgetState extends State<ControllableWidget> {
         ),
         // top left
         Positioned(
-          top: widget.top - circleDiameter / 2,
-          left: widget.left - circleDiameter / 2,
+          top: widget.top - widget.circleSize / 2,
+          left: widget.left - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeUpLeft,
-            onDrag: _topLeft,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeUpLeft,
+              onDrag: _topLeft,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // top middle
         Positioned(
-          top: widget.top - circleDiameter / 2,
-          left: widget.left + widget.width / 2 - circleDiameter / 2,
+          top: widget.top - widget.circleSize / 2,
+          left: widget.left + widget.width / 2 - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeUp,
-            onDrag: _topCenter,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeUp,
+              onDrag: _topCenter,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // top right
         Positioned(
-          top: widget.top - circleDiameter / 2,
-          left: widget.left + widget.width - circleDiameter / 2,
+          top: widget.top - widget.circleSize / 2,
+          left: widget.left + widget.width - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeUpRight,
-            onDrag: _topRight,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeUpRight,
+              onDrag: _topRight,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // center right
         Positioned(
-          top: widget.top + widget.height / 2 - circleDiameter / 2,
-          left: widget.left + widget.width - circleDiameter / 2,
+          top: widget.top + widget.height / 2 - widget.circleSize / 2,
+          left: widget.left + widget.width - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeRight,
-            onDrag: _centerRight,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeRight,
+              onDrag: _centerRight,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // bottom right
         Positioned(
-          top: widget.top + widget.height - circleDiameter / 2,
-          left: widget.left + widget.width - circleDiameter / 2,
+          top: widget.top + widget.height - widget.circleSize / 2,
+          left: widget.left + widget.width - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeDownRight,
-            onDrag: _bottomRight,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeDownRight,
+              onDrag: _bottomRight,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // bottom center
         Positioned(
-          top: widget.top + widget.height - circleDiameter / 2,
-          left: widget.left + widget.width / 2 - circleDiameter / 2,
+          top: widget.top + widget.height - widget.circleSize / 2,
+          left: widget.left + widget.width / 2 - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeDown,
-            onDrag: _bottomCenter,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeDown,
+              onDrag: _bottomCenter,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         // bottom left
         Positioned(
-          top: widget.top + widget.height - circleDiameter / 2,
-          left: widget.left - circleDiameter / 2,
+          top: widget.top + widget.height - widget.circleSize / 2,
+          left: widget.left - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeDownLeft,
-            onDrag: _bottomLeft,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeDownLeft,
+              onDrag: _bottomLeft,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
         //left center
         Positioned(
-          top: widget.top + widget.height / 2 - circleDiameter / 2,
-          left: widget.left - circleDiameter / 2,
+          top: widget.top + widget.height / 2 - widget.circleSize / 2,
+          left: widget.left - widget.circleSize / 2,
           child: Circle(
-            cursor: SystemMouseCursors.resizeLeft,
-            onDrag: _leftCenter,
-            onEnd: _onEndResize,
-          ),
+              cursor: SystemMouseCursors.resizeLeft,
+              onDrag: _leftCenter,
+              onEnd: _onEndResize,
+              circleSize: widget.circleSize),
         ),
       ],
     );
   }
 
-  _onEndMove(details) {
+  void _onEndMove(details) {
     widget.onEndMove!(Offset(widget.left, widget.top));
     widget.onEndUpdate!(
         Offset(widget.left, widget.top), Size(widget.width, widget.height));
   }
 
-  _onEndResize(details) {
+  void _onEndResize(details) {
     widget.onEndResize!(Size(widget.width, widget.height));
     widget.onEndUpdate!(
         Offset(widget.left, widget.top), Size(widget.width, widget.height));

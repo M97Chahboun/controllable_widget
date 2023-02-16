@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const circleDiameter = 10.0;
-
 class Circle extends StatefulWidget {
   const Circle(
-      {super.key, required this.onDrag, required this.cursor, this.onEnd});
+      {super.key,
+      required this.onDrag,
+      required this.cursor,
+      this.onEnd,
+      required this.circleSize});
   final SystemMouseCursor cursor;
   final Function onDrag;
   final Function(DragEndDetails)? onEnd;
+  final double circleSize;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -43,8 +46,8 @@ class _BallState extends State<Circle> {
         onPanUpdate: _handleUpdate,
         onPanEnd: widget.onEnd,
         child: Container(
-          width: circleDiameter,
-          height: circleDiameter,
+          width: widget.circleSize,
+          height: widget.circleSize,
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 33, 243, 100).withOpacity(0.5),
             shape: BoxShape.circle,

@@ -1,7 +1,8 @@
 import 'dart:math';
 
-import 'package:controllable_widget/src/circle.dart';
 import 'package:flutter/material.dart';
+
+import 'circle.dart';
 
 typedef OnMove = void Function(Offset newOffset);
 typedef OnResize = void Function(Size newSize);

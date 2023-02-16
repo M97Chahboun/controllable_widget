@@ -1,4 +1,4 @@
-import 'package:controllable_widget/controllable_widget.dart';
+import 'package:control_widget/control_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {

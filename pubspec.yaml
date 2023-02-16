@@ -1,7 +1,7 @@
 name: controllable_widget
-description: A new Flutter package project.
+description: Package for make widget controllable.
 version: 0.0.1
-homepage:
+homepage: https://github.com/M97Chahboun/controllable_widget
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
